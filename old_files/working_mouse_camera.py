@@ -27,8 +27,8 @@ class Game(ShowBase):
         
         block = self.loader.loadModel("models/box")
         block.reparentTo(self.render)
-        block.setScale(1, 1, 1)
-        block.setPos(0, 0, 0)
+        block.setScale(60, 60, 1)
+        block.setPos(-29, -32, 0)
 
         self.camera.setPos(3, -3, 4)
         self.camera.lookAt(0, 0, 0.5)

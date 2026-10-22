@@ -1,0 +1,14 @@
+{
+    "settings": {
+	"speed": 12,
+        "sensitivity": 80.0,
+	"keybinds": {
+            "forward": "w",
+	    "backward": "s",
+	    "left" : "a",
+	    "right" : "d",
+	    "up" : "space",
+	    "down" : "shift"
+	}
+    }
+}
