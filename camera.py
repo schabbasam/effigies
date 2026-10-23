@@ -26,7 +26,12 @@ class CameraController:
         
         self.key_states = {}
         self.sensitivity = self.settings.sensitivity
-
+        
+        self.setupLook()
+        self.setupMovement()
+    
+    def setupLook(self):
+        
         p = WindowProperties()
         # M_confined is responsible for keeping the mouse inside the window
         p.setMouseMode(WindowProperties.M_confined)
@@ -39,8 +44,6 @@ class CameraController:
         # otherwise i wouldn't work and you'd get a nasty error
         # the 0 means 0s delay, but the actual purpose is to execute the function in the next task
         self.app.taskMgr.doMethodLater(0, self.resolveMouse, "resolve-mouse")
-
-        self.setupMovement()
 
     def setupMovement(self):
         # dict with every keybind and boolean value for pressed/not pressed
@@ -59,7 +62,7 @@ class CameraController:
         # initalize the mouse
         self.lastX = None
         self.lastY = None
-        self.app.taskMgr.add(self.updateCamera, "camera")
+        self.app.taskMgr.add(self.updateCamera, "camera", sort=50)
 
         # although resolveMouse is a task, it's meant to be executed only once
         return task.done
@@ -73,30 +76,46 @@ class CameraController:
         centerY = p.getYSize() // 2
         
         self.app.win.movePointer(0, centerX, centerY)
-        self.ignore_next_mouse_delta = True
+
+        self.lastX = 0.0
+        self.lastY = 0.0
+
+    def updateLook4(self):
+        watcher = self.app.mouseWatcherNode
+        
+        # Prüfen, ob sich die Maus überhaupt im Fenster befindet
+        if not watcher.hasMouse():
+            return
+
+        # Da die Maus im letzten Frame zentriert wurde, 
+        # ist (0,0) die Mitte. Die aktuellen Koordinaten SIND das Delta!
+        deltaX = watcher.getMouseX()
+        deltaY = watcher.getMouseY()
+        
+        self.heading  -= deltaX * self.sensitivity
+        self.pitch    += deltaY * self.sensitivity
+        
+        # Verhindert das Über-Kopf-Klappen
+        self.pitch = max(-90.0, min(90.0, self.pitch))
+
+        self.app.camera.setHpr(self.heading, self.pitch, 0)
+
+        # Direkt wieder zentrieren für den nächsten Frame
+        self.recenterMouse()
 
     def updateLook(self):
         watcher = self.app.mouseWatcherNode
         
-        # the mouseWatcherNode gives normalized positions
-        # the values are between -1.0 (far right/bottom) and 1.0 (far left/top)
-        x = watcher.getMouseX()
-        y = watcher.getMouseY()
-        
-        if self.ignore_next_mouse_delta:
-            self.lastX = x
-            self.lastY = y
-            self.ignore_next_mouse_delta = False
+        if not watcher.hasMouse():
             return
 
-        if self.lastX is not None:
-            deltaX = x - self.lastX
-            deltaY = y - self.lastY
-        else:
-            deltaX, deltaY = 0.0, 0.0
+        # the mouseWatcherNode gives normalized positions
+        # the values are between -1.0 (far right/bottom) and 1.0 (far left/top)
+        deltaX = watcher.getMouseX()
+        deltaY = watcher.getMouseY()
 
-        self.lastX = x
-        self.lastY = y
+        if abs(deltaX) < 0.001: deltaX = 0.0
+        if abs(deltaY) < 0.001: deltaY = 0.0
         
         self.heading    -= deltaX * self.sensitivity
         self.pitch      += deltaY * self.sensitivity
@@ -140,10 +159,9 @@ class CameraController:
             movement.normalize()
 
             self.app.camera.setPos(
-                    self.app.camera, 
-                    movement * delta * self.settings.speed)
+                    self.app.camera.getPos()
+                    + movement * delta * self.settings.speed)
             # multiplying with delta makes the speed independant from the frame rate
-
 
     def updateCamera(self, task):
         self.updateLook()
