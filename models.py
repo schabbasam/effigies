@@ -3,6 +3,7 @@
 # thanks to https://opengameart.org/users/theness
 
 from panda3d.core import NodePath
+from panda3d.core import CollisionNode, CollisionBox, BitMask32
 
 # this class is the parent of all models
 class Model:
@@ -17,7 +18,7 @@ class Model:
         model.setScale(
                 size[0] / scale_factor,
                 size[1] / scale_factor,
-                size[3] / scale_factor
+                size[2] / scale_factor
         )
         
         # centering the origin (place where coordinates are measured)
@@ -27,6 +28,20 @@ class Model:
 
         # setting the color
         model.setColor(*color)
+
+        # setting up collision
+        collision_node = CollisionNode("block_collider")
+
+        # this creates an invisible collision box
+        collision_node.addSolid(CollisionBox(min_bound, max_bound))
+
+        # marks the block as something collidable
+        # bit(1) is just a preset category
+        collision_node.setIntoCollideMask(BitMask32.bit(1))
+        
+        # sets the model as a parent of collision_node
+        # that means it will move with it
+        self.model.attachNewNode(collision_node)
 
     def setPos(self, x, y, z):
         # simplifying positioning

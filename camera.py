@@ -4,12 +4,21 @@ from math import sin, cos, radians
 
 from direct.showbase.ShowBaseGlobal import globalClock
 from direct.task import Task
-from panda3d.core import WindowProperties, Vec3
+from panda3d.core import WindowProperties, Vec3, Point3
+from panda3d.core import (
+        CollisionNode,
+        CollisionBox,
+        CollisionHandlerPusher,
+        CollisionTraverser,
+        BitMask32
+)
 
 class CameraController:
     def __init__(self, app, settings):
         # we need to do this because this class does not inherit from ShowBase
         self.app = app
+        
+        self.app.camera.setPos(0, 0, 0.5)
 
         self.settings = settings
 
@@ -20,6 +29,8 @@ class CameraController:
         # disabling the default camera controls (function name is a lil misleading)
         self.app.disableMouse()
         
+        self.setupCollision()
+
         # heading is left/right, pitch is up/down
         self.heading    = 0.0
         self.pitch      = 0.0
@@ -29,6 +40,30 @@ class CameraController:
         
         self.setupLook()
         self.setupMovement()
+
+    def setupCollision(self):
+        collision_node = CollisionNode("camera_collider")
+
+        # creates a box around the camera with 0.5 "panda units" in each direction
+        collision_node.addSolid(CollisionBox(Point3(-0.5, -0.5, -0.5), Point3(0.5, 0.5, 0.5)))
+        
+        # collides with everything in the bit(1) category
+        collision_node.setFromCollideMask(BitMask32.bit(1))
+
+        # the camera is not a collision target to anyone
+        collision_node.setIntoCollideMask(BitMask32.allOff())
+
+        self.collision_node_path = self.app.camera.attachNewNode(collision_node)
+        
+        # the system that searches for collision
+        self.cTrav = CollisionTraverser()
+
+        # pushes objects out of obstacles
+        self.pusher = CollisionHandlerPusher()
+        
+        # registrate collision sphere to the moving node path (camera)
+        self.pusher.addCollider(self.collision_node_path, self.app.camera)
+        self.cTrav.addCollider(self.collision_node_path, self.pusher)
     
     def setupLook(self):
         
@@ -150,4 +185,7 @@ class CameraController:
     def updateCamera(self, task):
         self.updateLook()
         self.updateMovement()
+
+        self.cTrav.traverse(self.app.render)
+
         return task.cont
