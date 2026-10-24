@@ -15,7 +15,7 @@ class App(ShowBase):
         self.save_manager = SaveManager()
         self.settings = Settings(self.save_manager)
         self.camera_controller = CameraController(self, self.settings)
-        self.island = Island(self.render, self.loader, 5)
+        self.island = Island(self)
 
 
 app = App()

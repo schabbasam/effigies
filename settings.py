@@ -7,7 +7,7 @@ class Settings:
     # this needs to have every variable in the settings in user_data.json
     # otherwise, there will be an error
     DEFAULT_SETTINGS = {
-                "speed": 12,
+                "speed": 2,
                 "sensitivity": 80.0,
                 "keybinds": {
                         "forward": "w",

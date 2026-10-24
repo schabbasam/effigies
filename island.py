@@ -1,42 +1,32 @@
 # this class contains the island and game grid
 
+from models import Box, TexturedBox
+
 class Island:
-    def __init__(self, parent, loader, grid_size=5):
-        self.parent = parent
-        self.loader = loader
+    def __init__(self, app, grid_size=5):
+        self.app = app
         self.grid_size = grid_size
 
         self.nodes = []
 
         self.createIsland()
-        self.createGrid()
+#       self.createGrid()
 
     def createIsland(self):
         
-        island = self.loader.loadModel("models/box")
-        island.reparentTo(self.parent)
+        green = (0.25, 0.65, 0.25, 1)
+        brown = (0.35, 0.22, 0.12, 1)
 
-        island_width = self.grid_size
-        island_depth = 0.6
+        island = Box(self.app, (1, 1, 1), brown)
+        island.setPos(0, 0, 0)
 
-        island.setScale(island_width / 2, 
-                        island_width / 2, 
-                        island_depth / 2)
+        grass = TexturedBox(self.app, (1, 1, 1), green)
+        grass.setPos(0, 0, 0)
 
-        island.setPos(0, 0, -island_depth / 2)
-        island.setColor(0.35, 0.22, 0.12, 1)
+        a = Box(self.app, (0.001, 0.001, 0.01), (1, 1, 1, 1))
+        a.setPos(1, 1, 0)
 
         self.nodes.append(island)
-
-        grass = self.loader.loadModel("models/box")
-        grass.reparentTo(self.parent)
-        grass.setScale(island_width / 2,
-                       island_width / 2,
-                       0.05)
-
-        grass.setPos(0, 0, 0)
-        grass.setColor(0.25, 0.65, 0.25, 1)
-
         self.nodes.append(grass)
 
     def createGrid(self):

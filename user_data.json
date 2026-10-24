@@ -1,6 +1,6 @@
 {
     "settings": {
-	"speed": 12,
+	"speed": 2,
         "sensitivity": 80.0,
 	"keybinds": {
             "forward": "w",
