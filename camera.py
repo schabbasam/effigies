@@ -4,10 +4,10 @@ from math import sin, cos, radians
 
 from direct.showbase.ShowBaseGlobal import globalClock
 from direct.task import Task
-from panda3d.core import WindowProperties, Vec3, Point3
+from panda3d.core import WindowProperties, Vec3, Point3, TextNode
 from panda3d.core import (
         CollisionNode,
-        CollisionBox,
+        CollisionSphere,
         CollisionHandlerPusher,
         CollisionTraverser,
         BitMask32
@@ -19,6 +19,7 @@ class CameraController:
         self.app = app
         
         self.app.camera.setPos(0, 0, 0.5)
+        self.app.camLens.setNear(0.01)
 
         self.settings = settings
 
@@ -41,11 +42,20 @@ class CameraController:
         self.setupLook()
         self.setupMovement()
 
+        self.setupText()
+
+    def setupText(self):
+        self.position_text = self.app.aspect2d.attachNewNode(TextNode("position"))
+        self.position_text.node().setText("")
+        self.position_text.setScale(0.05)
+        self.position_text.reparentTo(self.app.a2dTopLeft)
+        self.position_text.setPos(0.5, 0, -0.5)
+
     def setupCollision(self):
         collision_node = CollisionNode("camera_collider")
 
-        # creates a box around the camera with 0.5 "panda units" in each direction
-        collision_node.addSolid(CollisionBox(Point3(-0.5, -0.5, -0.5), Point3(0.5, 0.5, 0.5)))
+        # creates a sphere around the camera at (0, 0, 0) with a 0.5 radius
+        collision_node.addSolid(CollisionSphere(0, 0, 0, 0.5))
         
         # collides with everything in the bit(1) category
         collision_node.setFromCollideMask(BitMask32.bit(1))
@@ -187,5 +197,9 @@ class CameraController:
         self.updateMovement()
 
         self.cTrav.traverse(self.app.render)
+        
+        # display coordinates
+        pos = self.app.camera.getPos()
+        self.position_text.node().setText(f"X: {pos.x:.2f} Y: {pos.y:.2f} Z: {pos.z:.2f}")
 
         return task.cont

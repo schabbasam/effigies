@@ -20,11 +20,11 @@ class Island:
         earth = Box(self.app, (20, 20, 1), brown)
         earth.setPos(0, 0, -0.8)
 
-        grass = TexturedBox(self.app, (19, 19, 0.3), green)
+        grass = TexturedBox(self.app, (20, 20, 0.3), green)
         grass.setPos(0, 0, -0.15)
 
-        a = Box(self.app, (0.001, 0.001, 0.01), (1, 1, 1, 1))
-        a.setPos(1, 1, 0)
+        a = Box(self.app, (0.1, 0.1, 1.0), (1, 1, 1, 1))
+        a.setPos(1, 1, 0.5)
 
         self.nodes.append(earth)
         self.nodes.append(grass)
