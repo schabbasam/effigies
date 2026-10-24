@@ -25,10 +25,10 @@ class Model:
         model.setColor(*color)
         
         # centering the origin (place where coordinates are measured)
-        min_bound, max_bound = model.getTightBounds()
+        min_bound, max_bound = model.getTightBounds(self.model)
         center = (min_bound + max_bound) / 2
-        model.setPos(-center)
-        
+        model.setPos(model.getPos() -center)
+
         # calculating bounds after recentering in the parent's coordinates
         min_bound, max_bound = model.getTightBounds(self.model)
 
@@ -52,9 +52,9 @@ class Model:
 
 class Box(Model):
     def __init__(self, app, size, color):
-        super().__init__(app, "assets/box.obj", size, color, 4)
+        super().__init__(app, "assets/box.obj", size, color, 2)
 
 class TexturedBox(Model):
     def __init__(self, app, size, color):
-        super().__init__(app, "models/box", size, color, 2)
+        super().__init__(app, "models/box", size, color, 1)
 
