@@ -20,16 +20,19 @@ class Model:
                 size[1] / scale_factor,
                 size[2] / scale_factor
         )
+
+        # setting the color
+        model.setColor(*color)
         
         # centering the origin (place where coordinates are measured)
         min_bound, max_bound = model.getTightBounds()
         center = (min_bound + max_bound) / 2
         model.setPos(-center)
+        
+        # calculating bounds after recentering in the parent's coordinates
+        min_bound, max_bound = model.getTightBounds(self.model)
 
-        # setting the color
-        model.setColor(*color)
-
-        # setting up collision
+        # set up collision
         collision_node = CollisionNode("block_collider")
 
         # this creates an invisible collision box
