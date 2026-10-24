@@ -7,7 +7,7 @@ from panda3d.core import CollisionNode, CollisionBox, BitMask32
 
 # this class is the parent of all models
 class Model:
-    def __init__(self, app, model_path, size, color, scale_factor):
+    def __init__(self, app, model_path, size, color, scale_factor, interactable=False):
 
         # properly loading the model
         self.model = app.render.attachNewNode("model")
@@ -44,17 +44,29 @@ class Model:
         
         # sets the model as a parent of collision_node
         # that means it will move with it
-        self.model.attachNewNode(collision_node)
+        collider_path = self.model.attachNewNode(collision_node)
+
+        self.interactable = interactable
+        self.original_color = color
+        self.loaded_model = model
+
+        collider_path.setPythonTag("model", self)
 
     def setPos(self, x, y, z):
         # simplifying positioning
         self.model.setPos(x, y, z)
 
+    def setHighlight(self, enabled):
+        if enabled:
+            self.loaded_model.setColor(1, 1, 0.3, 1)
+        else:
+            self.loaded_model.setcolor(*self.original_color)
+
 class Box(Model):
-    def __init__(self, app, size, color):
-        super().__init__(app, "assets/box.obj", size, color, 2)
+    def __init__(self, app, size, color, interactable=False):
+        super().__init__(app, "assets/box.obj", size, color, 2, interactable)
 
 class TexturedBox(Model):
-    def __init__(self, app, size, color):
-        super().__init__(app, "models/box", size, color, 1)
+    def __init__(self, app, size, color, interactable=False):
+        super().__init__(app, "models/box", size, color, 1, interactable)
 

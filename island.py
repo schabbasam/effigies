@@ -42,7 +42,8 @@ class Island:
                 tile = Box(
                         self.app,
                         (tile_size, tile_size, tile_height),
-                        tile_color
+                        tile_color,
+                        interactable=True
                 )
                 x = (column - (grid_size - 1) / 2) * tile_size
                 y = (row - (grid_size - 1) / 2) * tile_size

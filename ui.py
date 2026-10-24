@@ -19,3 +19,4 @@ class UI:
 
         self.crosshair.setTransparency(TransparencyAttrib.MAlpha)
         self.crosshair.setBin("fixed", 10)
+        self.crosshair.setColor(1, 1, 1, 0.5)
