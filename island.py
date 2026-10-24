@@ -17,20 +17,37 @@ class Island:
         green = (0.25, 0.65, 0.25, 1)
         brown = (0.35, 0.22, 0.12, 1)
 
-        earth = Box(self.app, (20, 20, 1), brown)
-        earth.setPos(0, 0, -0.8)
+        dirt = Box(self.app, (10, 10, 1), brown)
+        dirt.setPos(0, 0, -0.8)
 
-        grass = TexturedBox(self.app, (20, 20, 0.3), green)
+        grass = TexturedBox(self.app, (10, 10, 0.3), green)
         grass.setPos(0, 0, -0.15)
 
-        a = Box(self.app, (0.1, 0.1, 1.0), (1, 1, 1, 1))
-        a.setPos(1, 1, 0.5)
+        a = Box(self.app, (0.2, 0.2, 1), brown)
+        a.setPos(0, 0, 0.5)
 
-        self.nodes.append(earth)
+        self.nodes.append(dirt)
         self.nodes.append(grass)
 
     def createGrid(self):
-        pass
+        grid_size = 5
+        tile_size = 0.5
+        tile_height = 0.1
+        grid_z = tile_height / 2
+
+        tile_color = (0.3, 0.7, 0.3, 1)
+
+        for row in range(grid_size):
+            for column in range(grid_size):
+                tile = Box(
+                        self.app,
+                        (tile_size, tile_size, tile_height),
+                        tile_color
+                )
+                x = (column - (grid_size - 1) / 2) * tile_size
+                y = (row - (grid_size - 1) / 2) * tile_size
+
+                tile.setPos(x, y, grid_z)
 
     def destroy(self):
 

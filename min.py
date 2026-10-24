@@ -6,6 +6,7 @@ from camera import CameraController
 from save_manager import SaveManager
 from settings import Settings
 from island import Island
+from ui import UI
 
 class App(ShowBase):
     def __init__(self):
@@ -16,6 +17,7 @@ class App(ShowBase):
         self.settings = Settings(self.save_manager)
         self.camera_controller = CameraController(self, self.settings)
         self.island = Island(self)
+        self.ui = UI(self)
 
 
 app = App()
