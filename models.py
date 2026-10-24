@@ -4,45 +4,39 @@
 
 from panda3d.core import NodePath
 
-class Box:
-    def __init__(self, app, size, color):
-        
-        self.model = app.render.attachNewNode("box")
+# this class is the parent of all models
+class Model:
+    def __init__(self, app, model_path, size, color, scale_factor):
 
-        model = app.loader.loadModel("assets/box.obj")
+        # properly loading the model
+        self.model = app.render.attachNewNode("model")
+        model = app.loader.loadModel(model_path)
         model.reparentTo(self.model)
         
-        model.setScale(size[0] / 4,
-                       size[1] / 4,
-                       size[2] / 4)
+        # scale everything uniformly
+        model.setScale(
+                size[0] / scale_factor,
+                size[1] / scale_factor,
+                size[3] / scale_factor
+        )
         
+        # centering the origin (place where coordinates are measured)
         min_bound, max_bound = model.getTightBounds()
         center = (min_bound + max_bound) / 2
         model.setPos(-center)
 
+        # setting the color
         model.setColor(*color)
 
     def setPos(self, x, y, z):
+        # simplifying positioning
         self.model.setPos(x, y, z)
 
-class TexturedBox:
+class Box(Model):
     def __init__(self, app, size, color):
-        self.model = app.render.attachNewNode("box2")
+        super().__init__(app, "assets/box.obj", size, color, 4)
 
-        model = app.loader.loadModel("models/box")
-        model.reparentTo(self.model)
-        
-        model.setScale(size[0] / 2,
-                       size[1] / 2,
-                       size[2] / 2)
-
-        min_bound, max_bound = model.getTightBounds()
-        center = (min_bound + max_bound) / 2
-        model.setPos(-center)
-
-        model.setColor(*color)
-
-    def setPos(self, x, y, z):
-        self.model.setPos(x, y, z)
-
+class TexturedBox(Model):
+    def __init__(self, app, size, color):
+        super().__init__(app, "models/box", size, color, 2)
 
