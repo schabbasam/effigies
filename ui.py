@@ -3,6 +3,7 @@
 from direct.gui.OnscreenImage import OnscreenImage
 from panda3d.core import TransparencyAttrib, Vec4
 from direct.gui.DirectGui import DirectFrame
+from direct.gui.OnscreenText import OnscreenText
 
 import colors
 
@@ -18,6 +19,7 @@ class UI:
         self.updateColorBar(0)
 
         self.createCrosshair()
+        self.createGameInfo()
 
     def createCrosshair(self):
         self.crosshair = OnscreenImage(
@@ -56,3 +58,45 @@ class UI:
             ) if i == selected else (
                 -0.05, 0.05, -0.05, 0.05
             )
+
+
+    def createGameInfo(self):
+        # the current phase is displayed at the top of the screen
+        self.phase_text = OnscreenText(
+            text="memorize",
+            pos=(0, 0.85),
+            scale=0.07,
+            fg=(1, 1, 1, 1),
+            align=0
+        )
+
+        # the countdown is displayed directly below the phase
+        self.timer_text = OnscreenText(
+            text="20 s",
+            pos=(0, 0.75),
+            scale=0.06,
+            fg=(1, 1, 1, 1),
+            align=0
+        )
+
+        # the score is only shown after the round has finished
+        self.score_text = OnscreenText(
+            text="",
+            pos=(0, 0.65),
+            scale=0.06,
+            fg=(1, 1, 1, 1),
+            align=0
+        )
+
+    def updatePhase(self, phase):
+        # update the phase label without recreating the text element
+        self.phase_text.setText(phase)
+
+    def updateTimer(self, seconds):
+        # display the remaining time as whole seconds
+        self.timer_text.setText(f"{seconds} s")
+
+    def showScore(self, score):
+        # display the final score after the evaluation
+        self.score_text.setText(f"score: {score:g}")
+

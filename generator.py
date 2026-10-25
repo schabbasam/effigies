@@ -6,6 +6,12 @@ class Generator:
     def __init__(self, block_manger):
         self.block_manager = block_manger
 
+        self.directions = [
+            (1, 0, 0), (-1, 0, 0),
+            (0, 1, 0), (0, -1, 0),
+            (0, 0, 1), (0, 0, -1)
+        ]
+
     def generate(self, count=24):
         structure = {}
         positions = [
@@ -28,12 +34,6 @@ class Generator:
     def build(self, structure):
         for pos, color in structure.items():
             self.block_manager.placeBlock(pos, variant=color)
-
-    directions = [
-        (1, 0, 0), (-1, 0, 0),
-        (0, 1, 0), (0, -1, 0),
-        (0, 0, 1), (0, 0, -1)
-    ]
 
     def removeHiddenBlocks(self, structure):
         remove = []

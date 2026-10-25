@@ -102,6 +102,11 @@ class Interactor:
         return task.cont
 
     def placeBlock(self):
+
+        # blocks can only be changed during the building phase
+        if not self.app.game_manager.can_build:
+            return
+
         # it reuses the hovered_model determined by the update loop
         # instead of casting a second ray
         if self.hovered_model is None or self.hovered_normal is None:
@@ -145,6 +150,10 @@ class Interactor:
         )
 
     def removeBlock(self):
+        # blocks can only be changed during the building phase
+        if not self.app.game_manager.can_build:
+            return
+
         if self.hovered_model is None:
             return
 

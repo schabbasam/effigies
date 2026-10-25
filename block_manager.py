@@ -100,3 +100,7 @@ class BlockManager:
 
         # returns that it was a succes (that a block got deleted)
         return True
+
+    def removeAllBlocks(self):
+        for pos in list(self.blocks.keys()):
+            self.removeBlock(pos)
