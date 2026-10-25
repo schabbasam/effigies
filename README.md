@@ -5,6 +5,7 @@ A 3D memory-building game made with Python and Panda3D.
 ## About
 
 Effigies is a memory game where the player has to memorize a randomly generated block structure and rebuild it from memory.
+The name Effigies is Latin for ‘images’ or ‘representations’, referring to the structures.
 
 ## Gameplay
 
