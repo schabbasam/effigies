@@ -11,6 +11,13 @@ class GameManager:
         self.island = app.island
         self.block_manager = self.island.block_manager
         self.ui = app.ui
+        
+        # access the existing save manager
+        self.save_manager = app.save_manager
+
+        # display the saved highscore when the game starts
+        highscore = self.save_manager.data().get("highscore", 0)
+        self.ui.updateHighscore(highscore)
 
         self.generator = Generator(self.block_manager)
 
@@ -112,7 +119,9 @@ class GameManager:
         self.ui.updateTimer(0)
 
         # calculate the score and pass it to the UI for display
+        # call the updateHighscore function
         self.score = self.evaluate()
+        self.updateHighscore()
         self.ui.showScore(self.score)
 
         return task.done
@@ -137,4 +146,21 @@ class GameManager:
 
         # missing blocks receive no points and no direct penalty
         return score
+
+    def updateHighscore(self):
+        # get the dictionary containing all saved user data
+        data = self.save_manager.data()
+
+        # retrieve the previous highscore, or use 0 if it doesn't exist
+        highscore = data.get("highscore", 0)
+
+        # only update the highscore if the new score is higher
+        if self.score > highscore:
+            data["highscore"] = self.score
+
+            # save the updated data to user_data.json
+            self.save_manager.save()
+            
+            # update it on the screen
+            self.ui.updateHighscore(self.score)
 

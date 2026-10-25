@@ -32,6 +32,15 @@ class UI:
         self.crosshair.setBin("fixed", 10)
         self.crosshair.setColor(1, 1, 1, 0.8)
 
+        # display the saved highscore in the top-left corner
+        self.highscore_text = OnscreenText(
+            text="Highscore: 0",
+            pos=(-1.3, 0, 0.9),
+            scale=0.05,
+            fg=(1, 1, 1, 1),
+            align=0
+        )
+
     def createColorBar(self):
         count = len(colors.LIST)
         spacing = 0.2
@@ -100,3 +109,6 @@ class UI:
         # display the final score after the evaluation
         self.score_text.setText(f"score: {score:g}")
 
+    def updateHighscore(self, score):
+        # update the displayed highscore
+        self.highscore_text.setText(f"highscore: {score:g}")

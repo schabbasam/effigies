@@ -10,5 +10,6 @@
 	    "up" : "space",
 	    "down" : "shift"
 	}
-    }
+    },
+    "highscore": 0
 }

@@ -22,6 +22,6 @@ class SaveManager:
         return self._data
 
     def save(self):
-        with self.file_path.open("w", encoding="utf-8") as file:
+        with self.path.open("w", encoding="utf-8") as file:
             json.dump(self._data, file, indent=4, ensure_ascii=False)
 
