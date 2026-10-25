@@ -1,6 +1,13 @@
 # all used colors
 # in rgba tuples
 
+
+# light colors for shaders
+SUN     = (1, 1, 1, 1)
+
+_amb = 0.4
+AMBIENT = (_amb, _amb, _amb, 1)
+
 # main colors
 BLACK = (0.0, 0.0, 0.0, 1.0)
 WHITE = (1.0, 1.0, 1.0, 1.0)
