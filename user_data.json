@@ -1,5 +1,6 @@
 {
     "settings": {
+	"difficulty": 14,
 	"speed": 4,
         "sensitivity": 60.0,
 	"keybinds": {

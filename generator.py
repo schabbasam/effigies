@@ -12,7 +12,8 @@ class Generator:
             (0, 0, 1), (0, 0, -1)
         ]
 
-    def generate(self, count=24):
+    def generate(self):
+        count = self.block_manager.island.app.save_manager.data()["settings"]["difficulty"]
         structure = {}
         positions = [
             (x, y, z)
