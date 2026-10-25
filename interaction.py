@@ -44,8 +44,11 @@ class Interactor:
         # they both get connected
         self.traverser.addCollider(self.ray_path, self.queue)
 
-        self.app.accept("mouse1", self.placeBlock)
-        self.app.accept("mouse3", self.removeBlock)
+        self.app.accept("mouse3", self.placeBlock)
+        self.app.accept("mouse1", self.removeBlock)
+
+        self.app.accept("wheel_up", self.selectNextColor, [1])
+        self.app.accept("wheel_down", self.selectNextColor, [-1])
 
         self.app.taskMgr.add(self.update, "interaction_update")
 
@@ -154,3 +157,10 @@ class Interactor:
         if self.block_manager.removeBlock(pos):
             self.hovered_model = None
             self.hovered_normal = None
+
+    def selectNextColor(self, direction):
+        self.selected_block = (
+            self.selected_block + direction
+        ) % len(colors.LIST)
+
+        self.app.ui.updateColorBar(self.selected_block)
