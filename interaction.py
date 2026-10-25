@@ -1,5 +1,6 @@
 # handles all interactions with game elements
 
+import random
 import colors
 from panda3d.core import (
         CollisionNode,
@@ -19,8 +20,7 @@ class Interactor:
         self.hovered_normal = None
 
         # relevant for placing blocks
-        self.selected_block = 0
-        self.selected_variant = colors.LIST[5]
+        self.selected_color = random.randrange(len(colors.LIST) - 1)
 
         # create ray from the center of the camera
         self.ray = CollisionRay()
@@ -141,8 +141,7 @@ class Interactor:
 
         self.block_manager.placeBlock(
                 pos,
-                self.selected_block,
-                self.selected_variant
+                variant=colors.LIST[self.selected_color]
         )
 
     def removeBlock(self):
@@ -159,8 +158,8 @@ class Interactor:
             self.hovered_normal = None
 
     def selectNextColor(self, direction):
-        self.selected_block = (
-            self.selected_block + direction
+        self.selected_color = (
+            self.selected_color + direction
         ) % len(colors.LIST)
 
-        self.app.ui.updateColorBar(self.selected_block)
+        self.app.ui.updateColorBar(self.selected_color)

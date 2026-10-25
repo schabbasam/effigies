@@ -32,7 +32,7 @@ class UI:
 
     def createColorBar(self):
         count = len(colors.LIST)
-        spacing = 0.09
+        spacing = 0.2
         size = 0.065
         start_x = -(count - 1) * spacing / 2
 

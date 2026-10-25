@@ -33,7 +33,7 @@ class BlockManager:
         # we use .get() because it doesn't throw a tantrum if the key doesn't exist
         return self.blocks.get(tuple(pos))
 
-    def placeBlock(self, pos, block_type=0, variant=0):
+    def placeBlock(self, pos, variant=0):
 
         # this just turns a list into a tuple
         # doesn't really matter tho because we just insert a tuple
@@ -47,7 +47,6 @@ class BlockManager:
         if pos in self.blocks:
             return None
 
-        # basic block for the MVP
         # different block types can be added later 
         block = Box(
             self.app,
