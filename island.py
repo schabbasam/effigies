@@ -1,6 +1,7 @@
 # this class contains the island and game grid
 
 from models import Box, TexturedBox
+import colors
 
 class Island:
     def __init__(self, app, grid_size=5):
@@ -14,17 +15,11 @@ class Island:
 
     def createIsland(self):
         
-        green = (0.25, 0.65, 0.25, 1)
-        brown = (0.35, 0.22, 0.12, 1)
-
-        dirt = Box(self.app, (10, 10, 1), brown)
+        dirt = Box(self.app, (10, 10, 1), colors.DIRT)
         dirt.setPos(0, 0, -0.8)
 
-        grass = TexturedBox(self.app, (10, 10, 0.3), green)
+        grass = TexturedBox(self.app, (10, 10, 0.3), colors.GRASS)
         grass.setPos(0, 0, -0.15)
-
-        a = Box(self.app, (0.2, 0.2, 1), brown)
-        a.setPos(0, 0, 0.5)
 
         self.nodes.append(dirt)
         self.nodes.append(grass)
@@ -35,7 +30,7 @@ class Island:
         tile_height = 0.1
         grid_z = tile_height / 2
 
-        tile_color = (0.3, 0.7, 0.3, 1)
+        tile_color = colors.LIST[0]
 
         for row in range(grid_size):
             for column in range(grid_size):

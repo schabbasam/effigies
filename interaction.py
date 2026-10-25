@@ -12,6 +12,10 @@ class Interactor:
     def __init__(self, app):
         self.app = app
         self.hovered_model = None
+        
+        # relevant for placing blocks
+        self.selected_block = 0
+        self.selected_variant = 0
 
         # create ray from the center of the camera
         self.ray = CollisionRay()

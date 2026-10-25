@@ -8,11 +8,14 @@ from settings import Settings
 from island import Island
 from ui import UI
 from interaction import Interactor
+import colors
 
 class App(ShowBase):
     def __init__(self):
         super().__init__()
         self.accept("escape", sys.exit)
+        
+        self.setBackgroundColor(colors.SKY)
 
         self.save_manager = SaveManager()
         self.settings = Settings(self.save_manager)
