@@ -60,7 +60,7 @@ class Model:
         if enabled:
             self.loaded_model.setColor(1, 1, 0.3, 1)
         else:
-            self.loaded_model.setcolor(*self.original_color)
+            self.loaded_model.setColor(*self.original_color)
 
 class Box(Model):
     def __init__(self, app, size, color, interactable=False):
