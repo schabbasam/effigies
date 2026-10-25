@@ -1,0 +1,82 @@
+
+name: Build Effigies
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: linux
+          - os: windows-latest
+            name: windows
+          - os: macos-latest
+            name: macos
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install panda3d pyinstaller
+
+      - name: Build on Linux or macOS
+        if: runner.os != 'Windows'
+        run: |
+          pyinstaller --noconfirm --clean --onedir \
+            --name Effigies \
+            --collect-all panda3d \
+            --add-data "assets:assets" \
+            main.py
+
+      - name: Build on Windows
+        if: runner.os == 'Windows'
+        run: |
+          pyinstaller --noconfirm --clean --onedir `
+            --name Effigies `
+            --collect-all panda3d `
+            --add-data "assets;assets" `
+            main.py
+
+      - name: Package build
+        shell: bash
+        run: |
+          cd dist
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            7z a "../Effigies-${{ matrix.name }}.zip" Effigies
+          else
+            zip -r "../Effigies-${{ matrix.name }}.zip" Effigies
+          fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Effigies-${{ matrix.name }}
+          path: Effigies-${{ matrix.name }}.zip
+
+      - name: Upload to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Effigies-${{ matrix.name }}.zip
+          generate_release_notes: true
+
