@@ -2,6 +2,7 @@
 from direct.showbase.ShowBase import ShowBase
 import sys
 
+from generator import Generator
 from shader import Shader
 from camera import CameraController
 from save_manager import SaveManager
@@ -25,6 +26,10 @@ class App(ShowBase):
         self.ui = UI(self)
         self.interactor = Interactor(self, self.island)
         self.shader = Shader(self)
+
+        self.generator = Generator(self.island.block_manager)
+        structure = self.generator.generate()
+        self.generator.build(structure)
 
 
 app = App()

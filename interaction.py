@@ -1,5 +1,6 @@
 # handles all interactions with game elements
 
+import colors
 from panda3d.core import (
         CollisionNode,
         CollisionRay,
@@ -19,7 +20,7 @@ class Interactor:
 
         # relevant for placing blocks
         self.selected_block = 0
-        self.selected_variant = 0
+        self.selected_variant = colors.LIST[5]
 
         # create ray from the center of the camera
         self.ray = CollisionRay()

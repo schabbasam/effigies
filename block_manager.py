@@ -52,7 +52,7 @@ class BlockManager:
         block = Box(
             self.app,
             (0.5, 0.5, 0.5),
-            colors.LIST[4],
+            variant,
             interactable=True
         )
 

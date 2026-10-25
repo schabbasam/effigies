@@ -33,7 +33,7 @@ class Island:
         tile_height = 0.1
         grid_z = tile_height / 2
 
-        tile_color = colors.LIST[0]
+        tile_color = colors.TILE
 
         for row in range(self.grid_size):
             for column in range(self.grid_size):
