@@ -22,7 +22,7 @@ class App(ShowBase):
         self.camera_controller = CameraController(self, self.settings)
         self.island = Island(self)
         self.ui = UI(self)
-        self.interactor = Interactor(self)
+        self.interactor = Interactor(self, self.island)
 
 
 app = App()

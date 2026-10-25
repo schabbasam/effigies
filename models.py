@@ -8,6 +8,8 @@ from panda3d.core import CollisionNode, CollisionBox, BitMask32
 # this class is the parent of all models
 class Model:
     def __init__(self, app, model_path, size, color, scale_factor, interactable=False):
+        
+        self.color = color
 
         # properly loading the model
         self.model = app.render.attachNewNode("model")
@@ -22,7 +24,7 @@ class Model:
         )
 
         # setting the color
-        model.setColor(*color)
+        model.setColor(self.color[0])
         
         # centering the origin (place where coordinates are measured)
         min_bound, max_bound = model.getTightBounds(self.model)
@@ -47,7 +49,6 @@ class Model:
         collider_path = self.model.attachNewNode(collision_node)
 
         self.interactable = interactable
-        self.original_color = color
         self.loaded_model = model
 
         collider_path.setPythonTag("model", self)
@@ -58,9 +59,12 @@ class Model:
 
     def setHighlight(self, enabled):
         if enabled:
-            self.loaded_model.setColor(1, 1, 0.3, 1)
+            self.loaded_model.setColor(self.color[1])
         else:
-            self.loaded_model.setColor(*self.original_color)
+            self.loaded_model.setColor(self.color[0])
+
+    def removeNode(self):
+        self.model.removeNode()
 
 class Box(Model):
     def __init__(self, app, size, color, interactable=False):

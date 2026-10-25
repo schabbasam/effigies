@@ -9,10 +9,14 @@ from panda3d.core import (
 )
 
 class Interactor:
-    def __init__(self, app):
+    def __init__(self, app, island):
         self.app = app
+        self.island = island
+
         self.hovered_model = None
-        
+        self.block_manager = island.block_manager
+        self.hovered_normal = None
+
         # relevant for placing blocks
         self.selected_block = 0
         self.selected_variant = 0
@@ -39,7 +43,9 @@ class Interactor:
         # they both get connected
         self.traverser.addCollider(self.ray_path, self.queue)
 
-        self.app.accept("mouse1", self.onClick)
+        self.app.accept("mouse1", self.placeBlock)
+        self.app.accept("mouse3", self.removeBlock)
+
         self.app.taskMgr.add(self.update, "interaction_update")
 
     def update(self, task):
@@ -50,6 +56,7 @@ class Interactor:
         self.queue.sortEntries()
 
         valid_model = None
+        valid_normal = None
         
         # getNumEntries returns the number of entries
         if self.queue.getNumEntries() > 0:
@@ -64,6 +71,7 @@ class Interactor:
 
                 if model.interactable:
                     valid_model = model
+                    valid_normal = entry.getSurfaceNormal(self.app.render)
 
         # if the target (hovered_model) from last time changed
         if valid_model != self.hovered_model:
@@ -82,13 +90,66 @@ class Interactor:
             # remembers the target change
             self.hovered_model = valid_model
         
+        self.hovered_normal = valid_normal
+
         # clear entries for the next task loop
         self.queue.clearEntries()
 
         return task.cont
 
-    def onClick(self):
+    def placeBlock(self):
         # it reuses the hovered_model determined by the update loop
         # instead of casting a second ray
-        if self.hovered_model:
-            print("clicked:", self.hovered_model)
+        if self.hovered_model is None or self.hovered_normal is None:
+            return
+
+        normal = self.hovered_normal
+
+        direction = (
+                round(normal.x),
+                round(normal.y),
+                round(normal.z)
+        )
+
+        if self.hovered_model in self.island.grid:
+            x, y = self.app.island.grid[self.hovered_model]
+
+            if direction[2] > 0:
+                pos = (x, y, 0)
+            else:
+                pos = (
+                        x + direction[0],
+                        y + direction[1],
+                        0
+                )
+            
+        elif hasattr(self.hovered_model, "block_pos"):
+            x, y, z = self.hovered_model.block_pos
+
+            pos = (
+                    x + direction[0],
+                    y + direction[1],
+                    z + direction[2]
+            )
+
+        else:
+            return
+
+        self.block_manager.placeBlock(
+                pos,
+                self.selected_block,
+                self.selected_variant
+        )
+
+    def removeBlock(self):
+        if self.hovered_model is None:
+            return
+
+        if not hasattr(self.hovered_model, "block_pos"):
+            return
+
+        pos = self.hovered_model.block_pos
+
+        if self.block_manager.removeBlock(pos):
+            self.hovered_model = None
+            self.hovered_normal = None
