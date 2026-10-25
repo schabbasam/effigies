@@ -2,17 +2,19 @@
 # in rgba tuples
 
 # light colors for shaders
-SUN     = (1, 1, 1, 1)
 
-_amb = 0.4
+_sun = 0.8
+SUN     = (_sun, _sun, _sun, 1)
+
+_amb = 0.5
 AMBIENT = (_amb, _amb, _amb, 1)
 
 # main colors
 BLACK = (0.0, 0.0, 0.0, 1.0)
 WHITE = (1.0, 1.0, 1.0, 1.0)
 
-DIRT    = (0.550, 0.320, 0.120, 1.0)
-GRASS   = (0.0, 1.0, 0.0, 1.0)  
+DIRT    = ((0.550, 0.320, 0.120, 1.0), BLACK)
+GRASS   = ((0.0, 1.0, 0.0, 1.0), BLACK) 
 SKY     = (0.353, 0.588, 0.804, 1.0)
 TILE    = (WHITE, (0.88, 0.88, 0.90, 1.0))
 

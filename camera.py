@@ -17,8 +17,8 @@ class CameraController:
     def __init__(self, app, settings):
         # we need to do this because this class does not inherit from ShowBase
         self.app = app
-        
-        self.app.camera.setPos(0, 0, 0.5)
+
+        self.app.camera.setPos(0, -4, 5)
         self.app.camLens.setNear(0.01)
 
         self.settings = settings
@@ -191,6 +191,13 @@ class CameraController:
                     self.app.camera.getPos()
                     + movement * delta * self.settings.speed)
             # multiplying with delta makes the speed independant from the frame rate
+
+        # keep the camera inside the allowed area
+        pos = self.app.camera.getPos()
+        pos.x = max(-20, min(20, pos.x))
+        pos.y = max(-20, min(20, pos.y))
+        pos.z = max(-20, min(20, pos.z))
+        self.app.camera.setPos(pos)
 
     def updateCamera(self, task):
         self.updateLook()
