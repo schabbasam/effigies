@@ -1,16 +1,16 @@
 {
     "settings": {
-	"difficulty": 10,
-	"speed": 4,
+        "difficulty": 8,
+        "speed": 4,
         "sensitivity": 60.0,
-	"keybinds": {
+        "keybinds": {
             "forward": "w",
-	    "backward": "s",
-	    "left" : "a",
-	    "right" : "d",
-	    "up" : "space",
-	    "down" : "shift"
-	}
+            "backward": "s",
+            "left": "a",
+            "right": "d",
+            "up": "space",
+            "down": "shift"
+        }
     },
     "highscore": 0
 }

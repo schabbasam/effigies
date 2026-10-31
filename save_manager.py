@@ -1,14 +1,13 @@
 # SaveManager reads and writes the user's settings and highscore.
 
+import copy
 import json
 import sys
 from pathlib import Path
-
+from settings import Settings
 
 class SaveManager:
     def __init__(self):
-        # In a packaged build, keep saves beside the executable so they remain
-        # writable and survive updates. In development, use the project folder.
         if getattr(sys, "frozen", False):
             self.path = Path(sys.executable).resolve().parent / "user_data.json"
         else:
@@ -18,6 +17,15 @@ class SaveManager:
         self.load()
 
     def load(self):
+        if not self.path.exists():
+            self._data = {
+                "settings": copy.deepcopy(Settings.DEFAULT_SETTINGS),
+                "highscore": 0
+            }
+            self.save()
+            print("WARNING: no user_data.json found, generating a new file with defaults")
+            return
+
         with self.path.open("r", encoding="utf-8") as file:
             self._data = json.load(file)
 
