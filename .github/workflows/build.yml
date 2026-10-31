@@ -1,3 +1,4 @@
+
 name: Build Effigies
 
 on:
@@ -43,7 +44,6 @@ jobs:
             --name Effigies \
             --collect-all panda3d \
             --add-data "assets:assets" \
-            --add-data "user_data.json:." \
             main.py
 
       - name: Build on Windows
@@ -53,12 +53,7 @@ jobs:
             --name Effigies `
             --collect-all panda3d `
             --add-data "assets;assets" `
-            --add-data "user_data.json;." `
             main.py
-
-      - name: Include writable user data beside executable
-        shell: bash
-        run: cp user_data.json dist/Effigies/user_data.json
 
       - name: Package build
         shell: bash
